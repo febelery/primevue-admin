@@ -1,9 +1,9 @@
 import App from './App.vue'
 import './assets/main.css'
 import router from './router'
-import zhCN from '@/locales/primevue'
 import Aura from '@primeuix/themes/aura'
 import { createPinia } from 'pinia'
+import { zh_CN } from 'primelocale/js/zh_CN.js'
 import PrimeVue from 'primevue/config'
 import { createApp } from 'vue'
 
@@ -20,7 +20,7 @@ app.use(PrimeVue, {
       cssLayer: false,
     },
   },
-  locale: zhCN,
+  locale: zh_CN,
   ripple: true,
 })
 
