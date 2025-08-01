@@ -1,3 +1,4 @@
+import createRouteGuard from './guards'
 import routes from './routes'
 import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router'
 
@@ -17,5 +18,7 @@ const router = createRouter({
   },
   routes: [...routes],
 })
+
+createRouteGuard(router)
 
 export default router
