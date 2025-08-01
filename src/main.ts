@@ -16,12 +16,17 @@ app.use(PrimeVue, {
     preset: Aura,
     options: {
       prefix: 'p',
-      darkModeSelector: 'system',
+      darkModeSelector: '.p-dark',
       cssLayer: false,
     },
   },
   locale: zh_CN,
   ripple: true,
 })
+
+// 检测系统是否为深色模式
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.classList.add('p-dark')
+}
 
 app.mount('#app')
