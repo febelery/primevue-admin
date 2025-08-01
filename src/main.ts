@@ -1,6 +1,7 @@
 import App from './App.vue'
 import './assets/main.css'
 import router from './router'
+import { DARK_CLASS } from '@/composables/useTheme'
 import Aura from '@primeuix/themes/aura'
 import { createPinia } from 'pinia'
 import { zh_CN } from 'primelocale/js/zh_CN.js'
@@ -16,17 +17,12 @@ app.use(PrimeVue, {
     preset: Aura,
     options: {
       prefix: 'p',
-      darkModeSelector: '.p-dark',
+      darkModeSelector: `.${DARK_CLASS}`,
       cssLayer: false,
     },
   },
   locale: zh_CN,
   ripple: true,
 })
-
-// 检测系统是否为深色模式
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-  document.documentElement.classList.add('p-dark')
-}
 
 app.mount('#app')
