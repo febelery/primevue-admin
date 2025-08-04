@@ -2,6 +2,7 @@ import { PrimeVueResolver } from '@primevue/auto-import-resolver'
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import MotionResolver from 'motion-v/resolver'
 import { fileURLToPath, URL } from 'node:url'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
@@ -15,7 +16,8 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
     Components({
-      resolvers: [PrimeVueResolver()],
+      dts: true,
+      resolvers: [PrimeVueResolver(), MotionResolver()],
     }),
   ],
   resolve: {

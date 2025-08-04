@@ -18,6 +18,7 @@ declare module 'vue' {
     InputGroupAddon: typeof import('primevue/inputgroupaddon')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    Motion: typeof import('motion-v')['Motion']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Select: typeof import('primevue/select')['default']

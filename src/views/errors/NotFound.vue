@@ -6,7 +6,7 @@
     <div class="absolute inset-0 overflow-hidden">
       <!-- 浮动圆圈 -->
       <div
-        class="bg-primary-200/30 dark:bg-primary-800/30 absolute top-20 left-20 h-32 w-32 animate-float rounded-full"
+        class="bg-primary-200/30 dark:bg-primary-800/30 animate-float absolute top-20 left-20 h-32 w-32 rounded-full"
       ></div>
 
       <!-- 几何图形 -->
