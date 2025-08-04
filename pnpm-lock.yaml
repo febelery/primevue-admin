@@ -45,6 +45,9 @@ importers:
         specifier: ^4.5.1
         version: 4.5.1(vue@3.5.18(typescript@5.8.3))
     devDependencies:
+      '@pinia/colada-devtools':
+        specifier: ^0.1.5
+        version: 0.1.5
       '@prettier/plugin-oxc':
         specifier: ^0.0.4
         version: 0.0.4
@@ -529,6 +532,9 @@ packages:
     resolution: {integrity: sha512-veXJXgF905UOvuxtmvzM328b4Itm8Fyu+lUq4PagXOmyRScevaVUXq6++ui3A/Gxd8yo0SHspHCbYkpuvJkXqQ==}
     cpu: [x64]
     os: [win32]
+
+  '@pinia/colada-devtools@0.1.5':
+    resolution: {integrity: sha512-KqWS6Uu8cOO6LTwbA5TxrMpExmZdffJiBYTDkp1l87JNNQ+Kj6tuYyrC3MuYz2ZY+OpwDGWX7IHlkDEaCu+PYQ==}
 
   '@pinia/colada@0.17.1':
     resolution: {integrity: sha512-we89QKKfLCCbhz/UOCJBYvZ5XdnbJYLDsO2prIO9W/0qMLSBRcehAi/Pm+q0wFIhvUbrAvblN3kUFxFNeyDxTw==}
@@ -2685,6 +2691,8 @@ snapshots:
 
   '@oxlint/win32-x64@1.8.0':
     optional: true
+
+  '@pinia/colada-devtools@0.1.5': {}
 
   '@pinia/colada@0.17.1(pinia@3.0.3(typescript@5.8.3)(vue@3.5.18(typescript@5.8.3)))':
     dependencies:
