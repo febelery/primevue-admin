@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { useTheme } from '@/composables/useTheme'
 import { PiniaColadaDevtools } from '@pinia/colada-devtools'
-import Toast from 'primevue/toast'
 import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
+import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
 
-const { initTheme } = useTheme()
+const { initTheme, theme } = useTheme()
 
 onMounted(() => {
   initTheme()
@@ -13,9 +14,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <Toast />
   <RouterView />
   <PiniaColadaDevtools />
+  <Toaster position="top-right" richColors :theme="theme" />
 </template>
 
 <style scoped></style>

@@ -193,12 +193,11 @@ import { useUserStore } from '@/stores/user'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
-import { useToast } from 'primevue/usetoast'
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
-const toast = useToast()
 const router = useRouter()
 const userStore = useUserStore()
 
@@ -233,12 +232,7 @@ const isFormValid = (form: any) => {
 
 const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFormData }) => {
   if (!valid) {
-    toast.add({
-      severity: 'error',
-      summary: '表单验证失败',
-      detail: '请检查输入的信息',
-      life: 3000,
-    })
+    toast.error('表单验证失败', { description: '请检查输入的信息' })
     return
   }
 
@@ -251,20 +245,10 @@ const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFo
     if (result.needOtp) {
       // 如果需要 OTP 验证，这里可以跳转到 OTP 验证页面
       // 或者显示 OTP 输入框
-      toast.add({
-        severity: 'info',
-        summary: '需要二次验证',
-        detail: '请输入验证码',
-        life: 5000,
-      })
+      toast.info('需要二次验证', { description: '请输入验证码' })
     } else {
       // 登录成功，跳转到首页
-      toast.add({
-        severity: 'success',
-        summary: '登录成功',
-        detail: `欢迎你，${values.username}！`,
-        life: 3000,
-      })
+      toast.success('登录成功', { description: `欢迎你，${values.username}！` })
 
       // 跳转到首页或用户之前访问的页面
       await router.push('/')
@@ -272,12 +256,7 @@ const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFo
   } catch (error: any) {
     // 显示错误信息
     const errorMessage = error?.data?.message || error?.message || '登录失败，请重试'
-    toast.add({
-      severity: 'error',
-      summary: '登录失败',
-      detail: errorMessage,
-      life: 5000,
-    })
+    toast.error('登录失败', { description: errorMessage })
   } finally {
     isLoading.value = false
   }
