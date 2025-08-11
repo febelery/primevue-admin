@@ -61,7 +61,7 @@ export default [
     }
 
     // 模拟需要OTP验证的情况（管理员账户）
-    if (user.role === 'admin' && Math.random() > 0.7) {
+    if (user.role === 'admin' && Math.random() > 0.5) {
       return HttpResponse.json(
         {
           need_otp: true,
@@ -101,21 +101,6 @@ export default [
         },
       )
     }
-
-    const user = users[0] // 假设是管理员
-    const token = `mock-token-${user.id}-${Date.now()}`
-    const expireAt = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60
-
-    return HttpResponse.json(
-      {
-        token,
-        expire_at: expireAt,
-        user,
-      },
-      {
-        status: 200,
-      },
-    )
   }),
 
   http.get(buildMockApiUrl('/auth/me'), async ({ request }) => {

@@ -50,138 +50,157 @@
 
         <!-- 卡片内容 -->
         <div class="p-8">
-          <Motion
-            :initial="{ opacity: 0, y: 20 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.6, delay: 0.2 }"
-            class="mb-8 text-center"
-          >
-            <div
-              class="from-primary to-primary-600 mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br shadow-lg transition-transform duration-300 hover:scale-110"
+          <!-- 登录表单视图 -->
+          <template v-if="!showOtpQR">
+            <Motion
+              :initial="{ opacity: 0, y: 20 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :transition="{ duration: 0.6, delay: 0.2 }"
+              class="mb-8 text-center"
             >
-              <i class="pi pi-lock text-primary-contrast text-2xl"></i>
-            </div>
-            <h1 class="text-surface-900 dark:text-surface-0 mb-2 text-2xl font-bold">欢迎回来</h1>
-            <p class="text-surface-600 dark:text-surface-400">请登录您的账户</p>
-          </Motion>
-
-          <!-- 登录表单 -->
-          <Motion
-            :initial="{ opacity: 0, y: 20 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.6, delay: 0.4 }"
-          >
-            <Form
-              v-slot="$form"
-              :initialValues="initialValues"
-              :resolver="resolver"
-              @submit="onFormSubmit"
-              class="space-y-6"
-            >
-              <!-- 用户名输入 -->
-              <div class="space-y-2">
-                <label
-                  for="username"
-                  class="text-surface-700 dark:text-surface-300 block text-sm font-medium"
-                >
-                  用户名
-                </label>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <i class="pi pi-user text-surface-500"></i>
-                  </InputGroupAddon>
-                  <InputText
-                    id="username"
-                    name="username"
-                    type="text"
-                    placeholder="请输入用户名"
-                    fluid
-                    :invalid="$form.username?.invalid"
-                  />
-                </InputGroup>
-                <Transition name="fade">
-                  <Message
-                    v-if="$form.username?.invalid"
-                    severity="error"
-                    size="small"
-                    variant="simple"
-                    class="mt-1"
-                  >
-                    {{ $form.username.error?.message }}
-                  </Message>
-                </Transition>
-              </div>
-
-              <!-- 密码输入 -->
-              <div class="space-y-2">
-                <label
-                  for="password"
-                  class="text-surface-700 dark:text-surface-300 block text-sm font-medium"
-                >
-                  密码
-                </label>
-                <InputGroup>
-                  <InputGroupAddon>
-                    <i class="pi pi-lock text-surface-500"></i>
-                  </InputGroupAddon>
-                  <Password
-                    id="password"
-                    name="password"
-                    placeholder="请输入密码"
-                    toggleMask
-                    fluid
-                    :invalid="$form.password?.invalid"
-                  />
-                </InputGroup>
-                <Transition name="fade">
-                  <Message
-                    v-if="$form.password?.invalid"
-                    severity="error"
-                    size="small"
-                    variant="simple"
-                    class="mt-1"
-                  >
-                    {{ $form.password.error?.message }}
-                  </Message>
-                </Transition>
-              </div>
-
-              <!-- 登录按钮 -->
-              <div class="pt-4">
-                <Button
-                  type="submit"
-                  :label="isLoading ? '登录中...' : '登 录'"
-                  icon="pi pi-sign-in"
-                  class="h-12 w-full text-base font-medium"
-                  :loading="isLoading"
-                  :disabled="isLoading || !isFormValid($form)"
-                  :severity="isFormValid($form) ? 'primary' : 'secondary'"
-                  :class="{
-                    'border-0 bg-gradient-to-r': isFormValid($form) && !isLoading,
-                    'cursor-not-allowed opacity-50': !isFormValid($form) || isLoading,
-                  }"
-                />
-              </div>
-            </Form>
-          </Motion>
-
-          <!-- 底部链接 -->
-          <Motion
-            :initial="{ opacity: 0, y: 20 }"
-            :animate="{ opacity: 1, y: 0 }"
-            :transition="{ duration: 0.6, delay: 0.6 }"
-            class="mt-8 text-center"
-          >
-            <p class="text-surface-600 dark:text-surface-400 text-sm">
-              还没有账户？
-              <a
-                href="#"
-                class="text-primary hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors duration-300"
+              <div
+                class="from-primary to-primary-600 mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br shadow-lg transition-transform duration-300 hover:scale-110"
               >
-                立即注册
-              </a>
-            </p>
-          </Motion>
+                <i class="pi pi-lock text-primary-contrast text-2xl"></i>
+              </div>
+              <h1 class="text-surface-900 dark:text-surface-0 mb-2 text-2xl font-bold">欢迎回来</h1>
+              <p class="text-surface-600 dark:text-surface-400">请登录您的账户</p>
+            </Motion>
+
+            <!-- 登录表单 -->
+            <Motion
+              :initial="{ opacity: 0, y: 20 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :transition="{ duration: 0.6, delay: 0.4 }"
+            >
+              <Form
+                v-slot="$form"
+                :initialValues="initialValues"
+                :resolver="resolver"
+                @submit="onFormSubmit"
+                class="space-y-6"
+              >
+                <!-- 用户名输入 -->
+                <div class="space-y-2">
+                  <label
+                    for="username"
+                    class="text-surface-700 dark:text-surface-300 block text-sm font-medium"
+                  >
+                    用户名
+                  </label>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <i class="pi pi-user text-surface-500"></i>
+                    </InputGroupAddon>
+                    <InputText
+                      id="username"
+                      name="username"
+                      type="text"
+                      placeholder="请输入用户名"
+                      fluid
+                      :invalid="$form.username?.invalid"
+                    />
+                  </InputGroup>
+                  <Transition name="fade">
+                    <Message
+                      v-if="$form.username?.invalid"
+                      severity="error"
+                      size="small"
+                      variant="simple"
+                      class="mt-1"
+                    >
+                      {{ $form.username.error?.message }}
+                    </Message>
+                  </Transition>
+                </div>
+
+                <!-- 密码输入 -->
+                <div class="space-y-2">
+                  <label
+                    for="password"
+                    class="text-surface-700 dark:text-surface-300 block text-sm font-medium"
+                  >
+                    密码
+                  </label>
+                  <InputGroup>
+                    <InputGroupAddon>
+                      <i class="pi pi-lock text-surface-500"></i>
+                    </InputGroupAddon>
+                    <Password
+                      id="password"
+                      name="password"
+                      placeholder="请输入密码"
+                      toggleMask
+                      fluid
+                      :invalid="$form.password?.invalid"
+                    />
+                  </InputGroup>
+                  <Transition name="fade">
+                    <Message
+                      v-if="$form.password?.invalid"
+                      severity="error"
+                      size="small"
+                      variant="simple"
+                      class="mt-1"
+                    >
+                      {{ $form.password.error?.message }}
+                    </Message>
+                  </Transition>
+                </div>
+
+                <!-- 登录按钮 -->
+                <div class="pt-4">
+                  <Button
+                    type="submit"
+                    :label="isLoading ? '登录中...' : '登 录'"
+                    icon="pi pi-sign-in"
+                    class="h-12 w-full text-base font-medium"
+                    :loading="isLoading"
+                    :disabled="isLoading || !isFormValid($form)"
+                    :severity="isFormValid($form) ? 'primary' : 'secondary'"
+                    :class="{
+                      'border-0 bg-gradient-to-r': isFormValid($form) && !isLoading,
+                      'cursor-not-allowed opacity-50': !isFormValid($form) || isLoading,
+                    }"
+                  />
+                </div>
+              </Form>
+            </Motion>
+
+            <!-- 底部链接 -->
+            <Motion
+              :initial="{ opacity: 0, y: 20 }"
+              :animate="{ opacity: 1, y: 0 }"
+              :transition="{ duration: 0.6, delay: 0.6 }"
+              class="mt-8 text-center"
+            >
+              <p class="text-surface-600 dark:text-surface-400 text-sm">
+                还没有账户？
+                <a
+                  href="#"
+                  class="text-primary hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors duration-300"
+                >
+                  立即注册
+                </a>
+              </p>
+            </Motion>
+          </template>
+
+          <!-- 二维码验证视图 -->
+          <template v-else>
+            <Motion
+              :initial="{ opacity: 0, scale: 0.95 }"
+              :animate="{ opacity: 1, scale: 1 }"
+              :transition="{ duration: 0.5 }"
+            >
+              <OtpQRCode
+                :otp-key="otpKey"
+                @back="handleOtpBack"
+                @success="handleOtpSuccess"
+                @expired="handleOtpExpired"
+              />
+            </Motion>
+          </template>
         </div>
       </div>
     </Motion>
@@ -189,6 +208,7 @@
 </template>
 
 <script setup lang="ts">
+import OtpQRCode from './components/OtpQRCode.vue'
 import { useUserStore } from '@/stores/user'
 import { zodResolver } from '@primevue/forms/resolvers/zod'
 import InputGroup from 'primevue/inputgroup'
@@ -225,6 +245,8 @@ const initialValues = reactive<LoginFormData>({
 const resolver = zodResolver(loginSchema)
 
 const isLoading = ref(false)
+const showOtpQR = ref(false)
+const otpKey = ref('')
 
 const isFormValid = (form: any) => {
   return form.username?.valid && form.password?.valid
@@ -243,9 +265,9 @@ const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFo
     const result = await userStore.login(values)
 
     if (result.needOtp) {
-      // 如果需要 OTP 验证，这里可以跳转到 OTP 验证页面
-      // 或者显示 OTP 输入框
-      toast.info('需要二次验证', { description: '请输入验证码' })
+      // 显示二维码验证
+      otpKey.value = result.otpKey || ''
+      showOtpQR.value = true
     } else {
       // 登录成功，跳转到首页
       toast.success('登录成功', { description: `欢迎你，${values.username}！` })
@@ -260,5 +282,30 @@ const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFo
   } finally {
     isLoading.value = false
   }
+}
+
+// 处理二维码验证成功
+const handleOtpSuccess = async (data: any) => {
+  showOtpQR.value = false
+
+  // 可以使用 data 中的用户信息
+  const username = data?.user?.username || '用户'
+  toast.success('验证成功', { description: `欢迎你，${username}！` })
+
+  // 跳转到首页
+  await router.push('/')
+}
+
+// 处理二维码验证返回
+const handleOtpBack = () => {
+  showOtpQR.value = false
+  otpKey.value = ''
+}
+
+// 处理二维码过期
+const handleOtpExpired = () => {
+  showOtpQR.value = false
+  otpKey.value = ''
+  toast.error('验证超时', { description: '请重新登录' })
 }
 </script>
