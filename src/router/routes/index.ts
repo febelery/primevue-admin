@@ -1,3 +1,4 @@
+import appRoutes from './app'
 import type { RouteRecordRaw } from 'vue-router'
 
 const systemRouteFiles = import.meta.glob('./system/*.ts', { eager: true })
@@ -10,4 +11,4 @@ Object.keys(systemRouteFiles).forEach((key) => {
   systemRoutes.push(...modList)
 })
 
-export default [...systemRoutes]
+export default [...appRoutes, ...systemRoutes]

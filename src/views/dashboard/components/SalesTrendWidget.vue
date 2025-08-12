@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import { useLayout } from './useLayout'
-import { ref, watch, onMounted } from 'vue'
-
-const { primary, surface, isDarkMode } = useLayout()
+import { useLayout } from '@/composables/useLayout'
+import { ref, onMounted, watch } from 'vue'
 
 const chartData = ref<any>(null)
 const chartOptions = ref<any>(null)
@@ -71,15 +69,27 @@ function setChartOptions() {
   }
 }
 
-watch([primary, surface, isDarkMode], () => {
+const { themeConfig } = useLayout()
+
+// 更新图表数据的函数
+const updateChart = () => {
   chartData.value = setChartData()
   chartOptions.value = setChartOptions()
-})
+}
 
 onMounted(() => {
-  chartData.value = setChartData()
-  chartOptions.value = setChartOptions()
+  updateChart()
 })
+
+// 监听主题变化，重新更新图表颜色
+watch(
+  () => [themeConfig.value.primary, themeConfig.value.isDark],
+  () => {
+    // 延迟一点时间确保 CSS 变量已更新
+    setTimeout(updateChart, 100)
+  },
+  { deep: true },
+)
 </script>
 
 <template>

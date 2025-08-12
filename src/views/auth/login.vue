@@ -262,7 +262,7 @@ const onFormSubmit = async ({ valid, values }: { valid: boolean; values: LoginFo
 
   try {
     // 调用用户存储的登录方法
-    const result = await userStore.login(values)
+    const result = (await userStore.login(values)) as any
 
     if (result.needOtp) {
       // 显示二维码验证

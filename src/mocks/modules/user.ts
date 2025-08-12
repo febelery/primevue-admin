@@ -1,144 +1,110 @@
 import { buildMockApiUrl } from '@/lib/utils'
-import { HttpResponse, http } from 'msw'
+import type { User, UpdateUserParams, ChangePasswordParams } from '@/types/user'
+import { UserRole, UserStatus } from '@/types/user'
+import { http, HttpResponse } from 'msw'
 
-const users = [
-  {
-    id: 1,
-    name: '管理员',
-    username: 'admin',
-    role: 'admin',
-    status: 'active',
-    avatar:
-      'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400',
-    permissions: ['*'],
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z',
-    lastLoginAt: '2024-01-15T10:30:00Z',
+// 模拟用户数据
+const mockUser: User = {
+  id: '1',
+  username: 'admin',
+  email: 'admin@example.com',
+  firstName: '管理员',
+  lastName: '用户',
+  fullName: '管理员用户',
+  avatar: 'https://primefaces.org/cdn/primevue/images/avatar/amyelsner.png',
+  role: UserRole.ADMIN,
+  status: UserStatus.ACTIVE,
+  lastLoginAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30分钟前
+  createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30).toISOString(), // 30天前
+  updatedAt: new Date().toISOString(),
+  preferences: {
+    theme: 'system',
+    language: 'zh-CN',
+    timezone: 'Asia/Shanghai',
+    notifications: {
+      email: true,
+      push: true,
+      sms: false,
+    },
+    privacy: {
+      profileVisible: true,
+      emailVisible: false,
+    },
   },
-  {
-    id: 2,
-    name: '编辑',
-    username: 'editor',
-    role: 'editor',
-    status: 'active',
-    avatar:
-      'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=400',
-    permissions: ['users.view', 'articles.view', 'articles.create', 'articles.edit'],
-    createdAt: '2024-01-02T00:00:00Z',
-    updatedAt: '2024-01-02T00:00:00Z',
-    lastLoginAt: '2024-01-14T09:15:00Z',
-  },
-  {
-    id: 3,
-    name: '普通用户',
-    username: 'user',
-    role: 'user',
-    status: 'active',
-    avatar:
-      'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=400',
-    permissions: ['dashboard.view', 'articles.view'],
-    createdAt: '2024-01-03T00:00:00Z',
-    updatedAt: '2024-01-03T00:00:00Z',
-    lastLoginAt: '2024-01-13T14:20:00Z',
-  },
-]
+}
 
-export default [
-  http.post(buildMockApiUrl('/auth/login'), async ({ request }) => {
-    const { username, password } = (await request.json()) as any
-    const user = users.find((u) => u.username === username)
-
-    if (!user || password !== 'asdfasdf') {
-      return HttpResponse.json(
-        {
-          status: 400,
-          message: '用户名或密码错误',
-        },
-        {
-          status: 400,
-        },
-      )
-    }
-
-    // 模拟需要OTP验证的情况（管理员账户）
-    if (user.role === 'admin' && Math.random() > 0.5) {
-      return HttpResponse.json(
-        {
-          need_otp: true,
-          otp_key: 'mock-otp-key-' + Date.now(),
-          message: '需要二次验证',
-        },
-        {
-          status: 202,
-        },
-      )
-    }
-
-    const token = `mock-token-${user.id}-${Date.now()}`
-    const expireAt = Math.floor(Date.now() / 1000) + 7 * 24 * 60 * 60 // 7天后过期
-
-    return HttpResponse.json(
-      {
-        token,
-        expire_at: expireAt,
-        user,
-      },
-      {
-        status: 200,
-      },
-    )
+const userHandlers = [
+  // 获取当前用户信息
+  http.get(buildMockApiUrl('/user/profile'), () => {
+    return HttpResponse.json(mockUser)
   }),
 
-  http.post(buildMockApiUrl('/auth/otp'), async ({ request }) => {
-    const { otp_key } = (await request.json()) as any
-    if (!otp_key || !otp_key.startsWith('mock-otp-key-')) {
-      return HttpResponse.json(
-        {
-          message: 'OTP密钥无效',
-        },
-        {
-          status: 400,
-        },
-      )
+  // 更新用户信息
+  http.patch(buildMockApiUrl('/user/profile'), async ({ request }) => {
+    const params = (await request.json()) as UpdateUserParams
+
+    // 更新模拟数据
+    if (params.firstName) mockUser.firstName = params.firstName
+    if (params.lastName) mockUser.lastName = params.lastName
+    if (params.email) mockUser.email = params.email
+    if (params.avatar) mockUser.avatar = params.avatar
+    if (params.preferences && mockUser.preferences) {
+      mockUser.preferences = {
+        ...mockUser.preferences,
+        ...params.preferences,
+        theme: params.preferences.theme || mockUser.preferences.theme,
+        language: params.preferences.language || mockUser.preferences.language,
+        timezone: params.preferences.timezone || mockUser.preferences.timezone,
+      }
     }
+
+    // 更新全名和更新时间
+    mockUser.fullName = `${mockUser.firstName}${mockUser.lastName}`
+    mockUser.updatedAt = new Date().toISOString()
+
+    return HttpResponse.json(mockUser)
   }),
 
-  http.get(buildMockApiUrl('/auth/me'), async ({ request }) => {
-    const authHeader = request.headers.get('Authorization')
-    if (!authHeader || !authHeader.startsWith('Bearer mock-token-')) {
-      return HttpResponse.json(
-        {
-          message: '未授权',
-        },
-        {
-          status: 401,
-        },
-      )
+  // 修改密码
+  http.patch(buildMockApiUrl('/user/password'), async ({ request }) => {
+    const params = (await request.json()) as ChangePasswordParams
+
+    // 模拟密码验证
+    if (params.currentPassword !== 'admin123') {
+      return HttpResponse.json({ message: '当前密码不正确' }, { status: 400 })
     }
 
-    // 从token中提取用户ID
-    const tokenParts = authHeader.split('-')
-    const userId = parseInt(tokenParts[2])
-    const user = users.find((u) => u.id === userId)
-
-    if (!user) {
-      return HttpResponse.json(
-        {
-          message: '未授权',
-        },
-        {
-          status: 401,
-        },
-      )
+    if (params.newPassword !== params.confirmPassword) {
+      return HttpResponse.json({ message: '新密码和确认密码不匹配' }, { status: 400 })
     }
 
-    return HttpResponse.json(
-      {
-        user,
-      },
-      {
-        status: 200,
-      },
-    )
+    if (params.newPassword.length < 6) {
+      return HttpResponse.json({ message: '密码长度至少为6位' }, { status: 400 })
+    }
+
+    return HttpResponse.json(null, { status: 200 })
+  }),
+
+  // 上传头像
+  http.post(buildMockApiUrl('/user/avatar'), async ({ request }) => {
+    const formData = await request.formData()
+    const file = formData.get('avatar') as File
+
+    if (!file) {
+      return HttpResponse.json({ message: '请选择要上传的文件' }, { status: 400 })
+    }
+
+    // 模拟文件上传，返回一个假的URL
+    const mockUrl = `https://example.com/avatars/${Date.now()}-${file.name}`
+
+    return HttpResponse.json({ url: mockUrl })
+  }),
+
+  // 退出登录
+  http.post(buildMockApiUrl('/auth/logout'), () => {
+    // 模拟退出登录
+    return HttpResponse.json(null, { status: 200 })
   }),
 ]
+
+export default userHandlers

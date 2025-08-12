@@ -1,7 +1,7 @@
 import { useUserStore } from '@/stores/user'
 import axios from 'axios'
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
-import { useToast } from 'primevue/usetoast'
+import { toast } from 'vue-sonner'
 
 export interface ErrorResponse<T = unknown> {
   status: number
@@ -24,11 +24,11 @@ if (import.meta.env.DEV && import.meta.env.VITE_USE_MOCK) {
 
 axios.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = useUserStore().getToken()
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
-      config.headers.set('Content-Type', 'application/json')
-    }
+    // const token = useUserStore().getToken()
+    // if (token) {
+    //   config.headers.Authorization = `Bearer ${token}`
+    //   config.headers.set('Content-Type', 'application/json')
+    // }
 
     return config
   },
@@ -50,7 +50,7 @@ axios.interceptors.response.use(
     const status = error?.response?.status || error?.status || 500
 
     if (status === 401) {
-      useUserStore().reset()
+      // useUserStore().reset()
 
       // 获取当前路径，避免redirect参数累加
       const currentPath = window.location.pathname + window.location.search
@@ -70,8 +70,7 @@ axios.interceptors.response.use(
 
     if (!error.response || status >= 500) {
       // window.location.href = '/500'
-      const toast = useToast()
-      toast.add({ severity: 'error', summary: '服务器错误，请稍后再试', life: 3000 })
+      toast.error('服务器错误，请稍后再试')
     }
 
     return Promise.reject(error?.response || error)

@@ -2,7 +2,7 @@ import App from './App.vue'
 import './api/interceptor'
 import './assets/main.css'
 import router from './router'
-import { DARK_CLASS } from '@/composables/useTheme'
+import { DARK_CLASS, useLayout } from '@/composables/useLayout'
 import { PiniaColada } from '@pinia/colada'
 import Aura from '@primeuix/themes/aura'
 import { createPinia } from 'pinia'
@@ -27,5 +27,9 @@ app.use(PrimeVue, {
   locale: zh_CN,
   ripple: true,
 })
+
+// 初始化布局配置
+const { initLayout } = useLayout()
+initLayout()
 
 app.mount('#app')
