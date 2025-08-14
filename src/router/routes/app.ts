@@ -339,13 +339,34 @@ const appRoutes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: 'demo',
+        name: 'Demo',
+        meta: {
+          title: '组件演示',
+          icon: 'pi pi-code',
+          order: 7,
+        },
+        children: [
+          {
+            path: 'user-menu',
+            name: 'UserMenuDemo',
+            component: () => import('@/views/demo/UserMenuDemo.vue'),
+            meta: {
+              title: 'UserMenu 组件',
+              icon: 'pi pi-user',
+              order: 1,
+            },
+          },
+        ],
+      },
+      {
         path: 'help',
         name: 'Help',
         component: () => import('@/views/ComingSoon.vue'),
         meta: {
           title: '帮助中心',
           icon: 'pi pi-question-circle',
-          order: 7,
+          order: 8,
         },
       },
     ],

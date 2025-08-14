@@ -27,20 +27,17 @@
       ></div>
     </div>
 
-    <!-- Sidebar -->
     <AppSidebar
       v-if="layoutConfig.sidebar.enabled"
       :collapsed="isSidebarCollapsed"
-      :width="sidebarWidth"
       @toggle="toggleSidebar"
-      @resize="handleSidebarResize"
       class="animate-slide-in-left relative z-10"
     />
 
     <div class="relative z-10 flex flex-1 flex-col overflow-hidden">
       <AppTopbar class="animate-fade-in-up z-2" />
 
-      <!-- Page Content -->
+      <!-- 内容区域 -->
       <main class="relative flex-1 overflow-auto">
         <div class="animate-fade-in-up h-full" style="animation-delay: 0.1s">
           <RouterView />
@@ -54,18 +51,10 @@
 import AppSidebar from './components/AppSidebar.vue'
 import AppTopbar from './components/AppTopbar.vue'
 import { useLayout } from '@/composables/useLayout'
-import { computed, provide, ref } from 'vue'
+import { provide } from 'vue'
 
 // 使用新的布局配置
 const { layoutConfig, isSidebarCollapsed, toggleSidebar } = useLayout()
-
-// 侧边栏宽度
-const sidebarWidth = ref(280)
-
-// 处理侧边栏宽度调整
-const handleSidebarResize = (width: number) => {
-  sidebarWidth.value = Math.max(64, Math.min(400, width))
-}
 
 // 布局方法
 const layoutMethods = {
@@ -83,8 +72,4 @@ const layoutMethods = {
 provide('layoutConfig', layoutConfig.value)
 provide('layoutMethods', layoutMethods)
 provide('sidebarCollapsed', isSidebarCollapsed)
-provide(
-  'sidebarWidth',
-  computed(() => sidebarWidth.value),
-)
 </script>

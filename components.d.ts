@@ -19,12 +19,15 @@ declare module 'vue' {
     Column: typeof import('primevue/column')['default']
     DataTable: typeof import('primevue/datatable')['default']
     Divider: typeof import('primevue/divider')['default']
+    Drawer: typeof import('primevue/drawer')['default']
     Form: typeof import('@primevue/forms/form')['default']
     IconField: typeof import('primevue/iconfield')['default']
     InputGroup: typeof import('primevue/inputgroup')['default']
     InputGroupAddon: typeof import('primevue/inputgroupaddon')['default']
     InputIcon: typeof import('primevue/inputicon')['default']
     InputText: typeof import('primevue/inputtext')['default']
+    MenuDebug: typeof import('./src/components/MenuDebug.vue')['default']
+    MenuTest: typeof import('./src/components/MenuTest.vue')['default']
     Message: typeof import('primevue/message')['default']
     Motion: typeof import('motion-v')['Motion']
     NotificationPanel: typeof import('./src/layouts/components/NotificationPanel.vue')['default']
@@ -43,6 +46,7 @@ declare module 'vue' {
     TieredMenu: typeof import('primevue/tieredmenu')['default']
     Toast: typeof import('primevue/toast')['default']
     ToggleSwitch: typeof import('primevue/toggleswitch')['default']
+    UserMenu: typeof import('./src/components/UserMenu.vue')['default']
   }
   export interface GlobalDirectives {
     Ripple: typeof import('primevue/ripple')['default']

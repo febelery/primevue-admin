@@ -1,5 +1,5 @@
 import { getCurrentUserApi, updateUserApi, logoutApi, loginApi } from '@/api/user'
-import type { UserMenuItem, UpdateUserParams, User } from '@/types/user'
+import type { UpdateUserParams, User } from '@/types/user'
 import { UserRole } from '@/types/user'
 import { defineStore } from 'pinia'
 
@@ -26,52 +26,6 @@ export const useUserStore = defineStore('user', {
 
     userAvatar(): string | undefined {
       return this.user?.avatar
-    },
-
-    // 用户菜单项
-    userMenuItems(): UserMenuItem[] {
-      return [
-        {
-          key: 'profile',
-          label: '个人资料',
-          icon: 'pi pi-user',
-          route: '/profile',
-        },
-        {
-          key: 'settings',
-          label: '账户设置',
-          icon: 'pi pi-cog',
-          route: '/settings',
-        },
-        {
-          key: 'preferences',
-          label: '偏好设置',
-          icon: 'pi pi-sliders-h',
-          route: '/preferences',
-        },
-        {
-          key: 'help',
-          label: '帮助中心',
-          icon: 'pi pi-question-circle',
-          route: '/help',
-        },
-        {
-          key: 'feedback',
-          label: '意见反馈',
-          icon: 'pi pi-comment',
-          route: '/feedback',
-        },
-        {
-          key: 'separator2',
-          separator: true,
-        },
-        {
-          key: 'logout',
-          label: '退出登录',
-          icon: 'pi pi-sign-out',
-          action: 'logout',
-        },
-      ]
     },
   },
 
@@ -144,15 +98,6 @@ export const useUserStore = defineStore('user', {
         this.error = err instanceof Error ? err : new Error('退出登录失败')
       } finally {
         this.loading = false
-      }
-    },
-
-    // 处理用户菜单点击
-    async handleUserMenuClick(item: UserMenuItem) {
-      if (item.action === 'logout') {
-        await this.logout()
-      } else if (item.route) {
-        console.log('导航到:', item.route)
       }
     },
 

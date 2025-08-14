@@ -13,7 +13,7 @@
         class="via-primary/30 absolute right-0 bottom-0 left-0 h-px bg-gradient-to-r from-transparent to-transparent"
       ></div>
     </div>
-    <div class="relative z-10 flex items-center space-x-6">
+    <div class="relative flex items-center space-x-6">
       <!-- 面包屑导航 -->
       <div class="hidden max-w-sm items-center overflow-hidden md:flex lg:max-w-md">
         <div
@@ -58,7 +58,7 @@
       </div>
     </div>
 
-    <div class="relative z-10 flex items-center space-x-3">
+    <div class="relative flex items-center space-x-3">
       <!-- 全屏切换 -->
       <Button
         :icon="isFullscreen ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"
@@ -119,27 +119,27 @@
     <!-- 更多操作菜单 -->
     <Popover ref="ellipsisMenuRef">
       <div class="w-48 space-y-1">
-        <div
+        <router-link
+          to="/settings"
           class="hover:bg-surface-100 dark:hover:bg-surface-800 flex cursor-pointer items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-colors"
-          @click="handleQuickAction('settings')"
         >
           <i class="pi pi-cog text-surface-500"></i>
           <span>系统设置</span>
-        </div>
-        <div
+        </router-link>
+        <router-link
+          to="/help"
           class="hover:bg-surface-100 dark:hover:bg-surface-800 flex cursor-pointer items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-colors"
-          @click="handleQuickAction('help')"
         >
           <i class="pi pi-question-circle text-surface-500"></i>
           <span>帮助中心</span>
-        </div>
-        <div
+        </router-link>
+        <router-link
+          to="/feedback"
           class="hover:bg-surface-100 dark:hover:bg-surface-800 flex cursor-pointer items-center space-x-3 rounded-lg px-3 py-2 text-sm transition-colors"
-          @click="handleQuickAction('feedback')"
         >
           <i class="pi pi-comment text-surface-500"></i>
           <span>意见反馈</span>
-        </div>
+        </router-link>
       </div>
     </Popover>
 
@@ -167,11 +167,10 @@
 import LayoutConfigurator from './LayoutConfigurator.vue'
 import NotificationPanel from './NotificationPanel.vue'
 import { useNotificationStore } from '@/stores/notification'
-import { computed, ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const router = useRouter()
 
 // 通知 store
 const notificationStore = useNotificationStore()
@@ -214,8 +213,6 @@ const breadcrumbItems = computed(() => {
 })
 
 // 方法
-
-// 使用 PrimeVue Popover 的切换方法
 const toggleNotifications = (event: Event) => {
   notificationPanelRef.value?.toggle(event)
 }
@@ -241,32 +238,4 @@ const toggleFullscreen = () => {
     isFullscreen.value = false
   }
 }
-
-// 快速操作处理
-const handleQuickAction = (action: string) => {
-  ellipsisMenuRef.value?.hide()
-
-  switch (action) {
-    case 'settings':
-      router.push('/settings')
-      break
-    case 'help':
-      router.push('/help')
-      break
-    case 'feedback':
-      // 处理反馈逻辑
-      console.log('打开反馈页面')
-      break
-  }
-}
-
-// 监听路由变化关闭所有面板
-watch(
-  () => route.path,
-  () => {
-    ellipsisMenuRef.value?.hide()
-    layoutConfigPanelRef.value?.hide()
-    notificationPanelRef.value?.hide()
-  },
-)
 </script>
