@@ -6,19 +6,6 @@
 @custom-variant dark (&:where(.p-dark, .p-dark *));
 
 @layer utilities {
-  /* 3D 变换支持 */
-  .perspective-1000 {
-    perspective: 1000px;
-  }
-
-  .rotate-y-90 {
-    transform: rotateY(90deg);
-  }
-
-  .rotate-y-0 {
-    transform: rotateY(0deg);
-  }
-
   @keyframes float {
     0% {
       transform: translateY(0px);
@@ -30,44 +17,4 @@
       transform: translateY(0px);
     }
   }
-
-  .animate-float {
-    animation: float 3s ease-in-out infinite;
-  }
-}
-
-/* Dropdown 过渡动画 */
-.dropdown-enter-active,
-.dropdown-leave-active {
-  transition: all 0.2s ease;
-  transform-origin: top;
-}
-
-.dropdown-enter-from,
-.dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-10px) scale(0.95);
-}
-
-/* 移动端搜索过渡动画 */
-.mobile-search-enter-active,
-.mobile-search-leave-active {
-  transition: all 0.3s ease;
-}
-
-.mobile-search-enter-from,
-.mobile-search-leave-to {
-  opacity: 0;
-  transform: translateY(-100%);
-}
-
-/* 淡入淡出过渡动画 */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.2s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }

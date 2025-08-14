@@ -1,5 +1,32 @@
 <template>
-  <div class="bg-surface-50 dark:bg-surface-950 flex h-screen overflow-hidden">
+  <div
+    class="from-surface-50 via-surface-100 to-surface-200 dark:from-surface-950 dark:via-surface-900 dark:to-surface-800 relative flex h-screen overflow-hidden bg-gradient-to-br"
+  >
+    <!-- 背景装饰 -->
+    <div class="pointer-events-none absolute inset-0 overflow-hidden">
+      <!-- 渐变光晕 -->
+      <div
+        class="bg-primary/5 absolute -top-40 -right-40 h-80 w-80 animate-pulse rounded-full blur-3xl"
+      ></div>
+      <div
+        class="bg-primary/3 absolute -bottom-40 -left-40 h-80 w-80 animate-pulse rounded-full blur-3xl"
+        style="animation-delay: 1s"
+      ></div>
+
+      <!-- 网格背景 -->
+      <div
+        class="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
+        style="
+          background-image: radial-gradient(
+            circle at 1px 1px,
+            rgba(var(--p-surface-900), 0.3) 1px,
+            transparent 0
+          );
+          background-size: 20px 20px;
+        "
+      ></div>
+    </div>
+
     <!-- Sidebar -->
     <AppSidebar
       v-if="layoutConfig.sidebar.enabled"
@@ -7,16 +34,15 @@
       :width="sidebarWidth"
       @toggle="toggleSidebar"
       @resize="handleSidebarResize"
+      class="animate-slide-in-left relative z-10"
     />
 
-    <!-- Main Content Area -->
-    <div class="flex flex-1 flex-col overflow-hidden">
-      <!-- Topbar -->
-      <AppTopbar />
+    <div class="relative z-10 flex flex-1 flex-col overflow-hidden">
+      <AppTopbar class="animate-fade-in-up z-2" />
 
       <!-- Page Content -->
-      <main class="flex-1 overflow-auto">
-        <div class="h-full">
+      <main class="relative flex-1 overflow-auto">
+        <div class="animate-fade-in-up h-full" style="animation-delay: 0.1s">
           <RouterView />
         </div>
       </main>
@@ -33,7 +59,7 @@ import { computed, provide, ref } from 'vue'
 // 使用新的布局配置
 const { layoutConfig, isSidebarCollapsed, toggleSidebar } = useLayout()
 
-// 侧边栏宽度（保持向后兼容）
+// 侧边栏宽度
 const sidebarWidth = ref(280)
 
 // 处理侧边栏宽度调整
@@ -41,7 +67,7 @@ const handleSidebarResize = (width: number) => {
   sidebarWidth.value = Math.max(64, Math.min(400, width))
 }
 
-// 布局方法（保持向后兼容）
+// 布局方法
 const layoutMethods = {
   toggleSidebar,
   setSidebarVariant: (variant: string) => {
@@ -53,7 +79,7 @@ const layoutMethods = {
   },
 }
 
-// 提供布局配置和方法给子组件（保持向后兼容）
+// 提供布局配置和方法给子组件
 provide('layoutConfig', layoutConfig.value)
 provide('layoutMethods', layoutMethods)
 provide('sidebarCollapsed', isSidebarCollapsed)

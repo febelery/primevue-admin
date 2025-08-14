@@ -1,8 +1,6 @@
 <template>
   <!-- 通知面板 -->
-  <div
-    class="notification-panel bg-surface-0 dark:bg-surface-900 border-surface-200 dark:border-surface-700 rounded-lg border shadow-xl"
-  >
+  <div class="notification-panel bg-surface-0 dark:bg-surface-900">
     <!-- 面板头部 -->
     <div
       class="border-surface-200 dark:border-surface-700 flex items-center justify-between border-b px-4 py-3"
@@ -96,12 +94,6 @@
           ]"
           @click="handleNotificationClick(notification)"
         >
-          <!-- 未读指示器 -->
-          <div
-            v-if="notification.status === 'unread'"
-            class="bg-primary-500 absolute top-1/2 left-2 h-2 w-2 -translate-y-1/2 rounded-full"
-          ></div>
-
           <div class="flex items-start space-x-3">
             <!-- 图标/头像 -->
             <div class="flex-shrink-0">
@@ -370,16 +362,3 @@ onMounted(async () => {
   await notificationStore.fetchNotifications()
 })
 </script>
-
-<style scoped>
-.notification-panel {
-  width: 400px;
-  max-width: 90vw;
-}
-
-@media (max-width: 640px) {
-  .notification-panel {
-    width: 350px;
-  }
-}
-</style>
