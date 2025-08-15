@@ -14,46 +14,8 @@
       ></div>
     </div>
     <div class="relative flex items-center space-x-6">
-      <!-- 面包屑导航 -->
-      <div class="hidden max-w-sm items-center overflow-hidden md:flex lg:max-w-md">
-        <div class="flex min-w-0 items-center rounded-lg px-3 py-2 backdrop-blur-sm">
-          <nav class="flex items-center space-x-2 text-sm">
-            <!-- 首页 -->
-            <router-link
-              to="/"
-              class="text-surface-600 dark:text-surface-400 hover:text-primary hover:bg-surface-200/50 dark:hover:bg-surface-700/50 flex items-center rounded-md px-2 py-1 transition-colors"
-            >
-              <i class="pi pi-home text-sm"></i>
-            </router-link>
-
-            <!-- 面包屑项目 -->
-            <template v-for="(item, index) in breadcrumbItems" :key="index">
-              <i class="pi pi-chevron-right text-surface-400 text-xs"></i>
-
-              <!-- 可点击的面包屑项 -->
-              <router-link
-                v-if="item.to && index < breadcrumbItems.length - 1"
-                :to="item.to"
-                class="text-surface-600 dark:text-surface-400 hover:text-primary hover:bg-surface-200/50 dark:hover:bg-surface-700/50 flex max-w-24 items-center truncate rounded-md px-2 py-1 transition-colors lg:max-w-32"
-                :title="item.label"
-              >
-                <i v-if="item.icon" :class="[item.icon, 'mr-1 text-xs']"></i>
-                <span class="truncate font-medium">{{ item.label }}</span>
-              </router-link>
-
-              <!-- 当前页面（不可点击） -->
-              <span
-                v-else
-                class="text-surface-900 dark:text-surface-100 bg-primary/10 border-primary/20 flex max-w-24 min-w-0 items-center truncate rounded-lg border px-3 py-1.5 font-semibold lg:max-w-32"
-                :title="item.label"
-              >
-                <i v-if="item.icon" :class="[item.icon, 'mr-1 text-xs']"></i>
-                <span class="truncate">{{ item.label }}</span>
-              </span>
-            </template>
-          </nav>
-        </div>
-      </div>
+      <!-- 面包屑导航组件 -->
+      <Breadcrumb />
     </div>
 
     <div class="relative flex items-center space-x-3">
@@ -162,13 +124,11 @@
 </template>
 
 <script setup lang="ts">
+import Breadcrumb from './Breadcrumb.vue'
 import LayoutConfigurator from './LayoutConfigurator.vue'
 import NotificationPanel from './NotificationPanel.vue'
 import { useNotificationStore } from '@/stores/notification'
-import { computed, ref } from 'vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
+import { ref } from 'vue'
 
 // 通知 store
 const notificationStore = useNotificationStore()
@@ -180,37 +140,7 @@ const notificationPanelRef = ref()
 const layoutConfigButtonRef = ref()
 const notificationButtonRef = ref()
 
-// 面包屑导航
-const breadcrumbItems = computed(() => {
-  const breadcrumbs: Array<{ label: string; icon?: string; to?: string }> = []
-
-  // 基于匹配的路由记录构建面包屑
-  route.matched.forEach((record, index) => {
-    // 跳过根路由和布局路由
-    if (record.name === 'AppLayout' || !record.meta?.title) {
-      return
-    }
-
-    // 构建路由路径
-    let routePath = record.path
-
-    // 如果路径包含参数，使用当前路由的实际路径
-    if (routePath.includes(':')) {
-      const pathSegments = route.path.split('/').slice(0, index + 1)
-      routePath = pathSegments.join('/')
-    }
-
-    breadcrumbs.push({
-      label: record.meta.title as string,
-      icon: record.meta.icon as string,
-      to: routePath,
-    })
-  })
-
-  return breadcrumbs
-})
-
-// 方法
+// 弹出框控制方法
 const toggleNotifications = (event: Event) => {
   notificationPanelRef.value?.toggle(event)
 }

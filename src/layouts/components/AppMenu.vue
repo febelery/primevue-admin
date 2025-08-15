@@ -183,7 +183,6 @@ import { useMenu } from '@/composables/useMenu'
 import { computed, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
-// 定义组件属性
 interface Props {
   item: MenuItem
   collapsed?: boolean
@@ -217,15 +216,15 @@ const cascadeMenuRef = ref<HTMLElement>()
 const secondaryCascadeRef = ref<HTMLElement>()
 const cascadeItemRefs = ref<HTMLElement[]>([])
 
-// 计算属性：是否有子菜单
+// 是否有子菜单
 const hasChildren = computed(() => props.item.children && props.item.children.length > 0)
 
-// 计算属性：菜单是否展开
+// 菜单是否展开
 const isMenuExpanded = computed(() => {
   return props.inFloatingMenu ? isFloatingExpanded(props.item.key) : isExpanded(props.item.key)
 })
 
-// 计算属性：菜单项样式
+// 菜单项样式
 const menuItemClasses = computed(() => {
   const baseClasses = getMenuItemClasses(props.item, {
     collapsed: props.collapsed,
@@ -238,12 +237,12 @@ const menuItemClasses = computed(() => {
   return [...baseClasses, 'py-2 px-3 my-1']
 })
 
-// 计算属性：缩进样式
+// 缩进样式
 const indentStyle = computed(() => ({
   width: `${props.level * 20}px`, // 增加缩进宽度以提升视觉层次感
 }))
 
-// 计算属性：级联菜单样式
+// 级联菜单样式
 const cascadeMenuClasses = computed(() => [
   'fixed z-[9999] min-w-72 max-w-96',
   'bg-surface-0/95 dark:bg-surface-900/95 backdrop-blur-xl',
@@ -252,7 +251,7 @@ const cascadeMenuClasses = computed(() => [
   'transition-opacity duration-200',
 ])
 
-// 计算属性：级联菜单位置
+// 级联菜单位置
 const cascadeMenuPosition = computed(() => {
   if (!menuItemRef.value) return { display: 'none' }
   const rect = menuItemRef.value.getBoundingClientRect()
@@ -274,7 +273,7 @@ const cascadeMenuPosition = computed(() => {
   return { left: `${left}px`, top: `${top}px` }
 })
 
-// 计算属性：二级级联菜单位置
+// 二级级联菜单位置
 const secondaryCascadePosition = computed(() => {
   if (!state.hoveredItemElement || !state.currentHoveredItem) return { display: 'none' }
   const rect = state.hoveredItemElement.getBoundingClientRect()

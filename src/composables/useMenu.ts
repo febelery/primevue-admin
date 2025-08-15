@@ -15,6 +15,13 @@ export interface MenuItem {
   order?: number
 }
 
+// 面包屑项类型定义
+export interface BreadcrumbItem {
+  label: string
+  icon?: string
+  to?: string
+}
+
 // 菜单状态管理
 export interface MenuState {
   expandedKeys: Set<string>
@@ -232,18 +239,137 @@ export function useMenu() {
     }
   }
 
+  /**
+   * 寻找路由下第一个有效的可访问页面
+   * @param routeRecord 路由记录
+   * @returns 第一个有效页面的路径，如果没有找到则返回null
+   */
+  const findFirstAccessibleRoute = (routeRecord: any): string | null => {
+    // 如果当前路由有component且不被隐藏，则返回当前路由
+    if (routeRecord.component && !routeRecord.meta?.hideInMenu) {
+      return routeRecord.path
+    }
+
+    // 如果有子路由，递归查找
+    if (routeRecord.children && routeRecord.children.length > 0) {
+      // 按照order排序，确保按优先级查找
+      const sortedChildren = [...routeRecord.children].sort((a, b) => {
+        const orderA = a.meta?.order || 999
+        const orderB = b.meta?.order || 999
+        return orderA - orderB
+      })
+
+      for (const child of sortedChildren) {
+        // 跳过隐藏的菜单项
+        if (child.meta?.hideInMenu) {
+          continue
+        }
+
+        // 构建完整路径
+        const childPath = child.path.startsWith('/')
+          ? child.path
+          : `${routeRecord.path}/${child.path}`.replace(/\/+/g, '/')
+
+        // 如果子路由有component，直接返回
+        if (child.component) {
+          return childPath
+        }
+
+        // 如果子路由还有子路由，递归查找
+        if (child.children && child.children.length > 0) {
+          const childRecord = { ...child, path: childPath }
+          const result = findFirstAccessibleRoute(childRecord)
+          if (result) {
+            return result
+          }
+        }
+      }
+    }
+
+    return null
+  }
+
+  /**
+   * 智能路由跳转 - 如果目标路由没有组件，自动跳转到第一个可访问的子路由
+   * @param targetPath 目标路径
+   */
+  const navigateToRoute = async (targetPath: string) => {
+    const routes = router.getRoutes()
+
+    // 查找对应的路由记录
+    const targetRoute = routes.find((r) => {
+      // 去掉参数部分，比较基础路径
+      const basePath = r.path.replace(/:\w+/g, '')
+      const targetBasePath = targetPath.replace(/:\w+/g, '')
+      return basePath === targetBasePath || r.path === targetPath
+    })
+
+    if (!targetRoute) {
+      console.warn(`未找到路由记录: ${targetPath}`)
+      return
+    }
+
+    // 构建一个简化的路由记录用于查找
+    const routeRecord = {
+      path: targetPath,
+      component: targetRoute.components,
+      meta: targetRoute.meta,
+      children: targetRoute.children || [],
+    }
+
+    // 查找第一个可访问的路由
+    const firstAccessibleRoute = findFirstAccessibleRoute(routeRecord)
+
+    if (firstAccessibleRoute) {
+      try {
+        await router.push(firstAccessibleRoute)
+      } catch (error) {
+        console.error('路由跳转失败:', error)
+        // 如果跳转失败，尝试跳转到原始路径
+        await router.push(targetPath)
+      }
+    } else {
+      // 如果没有找到可访问的路由，跳转到原始路径
+      await router.push(targetPath)
+    }
+  }
+
+  /**
+   * 生成面包屑导航数据
+   */
+  const breadcrumbItems = computed((): BreadcrumbItem[] => {
+    const route = router.currentRoute.value
+    const breadcrumbs: BreadcrumbItem[] = []
+
+    // 基于匹配的路由记录构建面包屑
+    route.matched.forEach((record, index) => {
+      // 跳过根路由和布局路由
+      if (record.name === 'AppLayout' || !record.meta?.title) {
+        return
+      }
+
+      // 构建路由路径
+      let routePath = record.path
+
+      // 如果路径包含参数，使用当前路由的实际路径
+      if (routePath.includes(':')) {
+        const pathSegments = route.path.split('/').slice(0, index + 1)
+        routePath = pathSegments.join('/')
+      }
+
+      breadcrumbs.push({
+        label: record.meta.title as string,
+        icon: record.meta.icon as string,
+        to: routePath,
+      })
+    })
+
+    return breadcrumbs
+  })
+
   // 监听路由变化
   watch(
     () => router.currentRoute.value.path,
-    () => {
-      updateMenuState()
-    },
-    { immediate: true },
-  )
-
-  // 监听菜单数据变化
-  watch(
-    menuItems,
     () => {
       updateMenuState()
     },
@@ -263,5 +389,10 @@ export function useMenu() {
     handleMenuClick,
     updateMenuState,
     clearFloatingExpanded,
+
+    // 面包屑
+    breadcrumbItems,
+    navigateToRoute,
+    findFirstAccessibleRoute,
   }
 }
