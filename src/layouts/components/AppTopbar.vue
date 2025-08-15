@@ -1,6 +1,6 @@
 <template>
   <header
-    class="bg-surface-0/80 dark:bg-surface-900/80 border-surface-200/50 dark:border-surface-700/50 relative flex h-16 items-center justify-between border-b px-6 shadow-sm backdrop-blur-xl"
+    class="bg-surface-0/80 dark:bg-surface-900/80 border-surface-200/50 dark:border-surface-700/50 relative flex h-16 items-center justify-between px-6 backdrop-blur-xl"
   >
     <!-- 顶栏装饰背景 -->
     <div class="pointer-events-none absolute inset-0 overflow-hidden">
@@ -16,9 +16,7 @@
     <div class="relative flex items-center space-x-6">
       <!-- 面包屑导航 -->
       <div class="hidden max-w-sm items-center overflow-hidden md:flex lg:max-w-md">
-        <div
-          class="bg-surface-100/50 dark:bg-surface-800/50 flex min-w-0 items-center rounded-lg px-3 py-2 backdrop-blur-sm"
-        >
+        <div class="flex min-w-0 items-center rounded-lg px-3 py-2 backdrop-blur-sm">
           <nav class="flex items-center space-x-2 text-sm">
             <!-- 首页 -->
             <router-link

@@ -89,12 +89,32 @@ const appRoutes: RouteRecordRaw[] = [
               {
                 path: 'list',
                 name: 'ProductCategoriesList',
-                component: () => import('@/views/ComingSoon.vue'),
                 meta: {
                   title: '分类列表',
                   icon: 'pi pi-list',
-                  order: 1,
+                  order: 2,
                 },
+                children: [
+                  {
+                    path: 'a',
+                    name: 'ProductCategoriesListA',
+                    component: () => import('@/views/ComingSoon.vue'),
+                    meta: {
+                      title: '列表A',
+                      icon: 'pi pi-list',
+                      order: 1,
+                    },
+                  },
+                  {
+                    path: 'b',
+                    name: 'ProductCategoriesListB',
+                    component: () => import('@/views/ComingSoon.vue'),
+                    meta: {
+                      title: '列表B',
+                      order: 2,
+                    },
+                  },
+                ],
               },
               {
                 path: 'add',
@@ -103,7 +123,7 @@ const appRoutes: RouteRecordRaw[] = [
                 meta: {
                   title: '添加分类',
                   icon: 'pi pi-plus',
-                  order: 2,
+                  order: 1,
                 },
               },
               {

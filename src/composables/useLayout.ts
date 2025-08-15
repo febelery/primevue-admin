@@ -4,10 +4,15 @@ import { useStorage } from '@vueuse/core'
 import { computed } from 'vue'
 
 export type Theme = 'light' | 'dark' | 'system'
+export type LayoutMode = 'sidebar-topbar' | 'topbar-only'
 export const DARK_CLASS = 'p-dark'
 
 interface LayoutConfig {
+  /** 布局模式：侧栏+顶栏 或 仅顶栏 */
+  mode: LayoutMode
   sidebar: { enabled: boolean; collapsed: boolean; overlay: boolean }
+  /** 是否显示面包屑 */
+  showBreadcrumb: boolean
   animations: boolean
   ripple: boolean
 }
@@ -24,7 +29,9 @@ const LAYOUT_STORAGE_KEY = 'layout-config'
 const THEME_STORAGE_KEY = 'theme-config'
 
 const defaultLayoutConfig: LayoutConfig = {
+  mode: 'sidebar-topbar',
   sidebar: { enabled: true, collapsed: false, overlay: false },
+  showBreadcrumb: true,
   animations: true,
   ripple: true,
 }
@@ -142,6 +149,19 @@ export function useLayout() {
     isCustomColor: computed(() => themeConfig.value.colorType === 'custom'),
     isSidebarCollapsed: computed(() => layoutConfig.value.sidebar.collapsed),
 
+    // 布局模式相关
+    currentLayoutMode: computed(() => layoutConfig.value.mode),
+    isSidebarTopbarMode: computed(() => layoutConfig.value.mode === 'sidebar-topbar'),
+    isTopbarOnlyMode: computed(() => layoutConfig.value.mode === 'topbar-only'),
+    showBreadcrumb: computed(() => layoutConfig.value.showBreadcrumb),
+    isSidebarEnabled: computed(() => {
+      // 仅顶栏模式下禁用侧栏
+      if (layoutConfig.value.mode === 'topbar-only') {
+        return false
+      }
+      return layoutConfig.value.sidebar.enabled
+    }),
+
     // 双向绑定颜色
     primaryColor: computed({
       get: () => themeConfig.value.primary,
@@ -159,6 +179,22 @@ export function useLayout() {
       applyTheme((themeConfig.value.theme = themeConfig.value.isDark ? 'light' : 'dark')),
     setPrimary: (c: string) => setPrimaryColor(c),
     setPresetColor,
+
+    // 布局模式方法
+    setLayoutMode: (mode: LayoutMode) => {
+      layoutConfig.value.mode = mode
+      // 切换到仅顶栏模式时，自动调整相关配置
+      if (mode === 'topbar-only') {
+        layoutConfig.value.sidebar.enabled = false
+        layoutConfig.value.showBreadcrumb = false
+      } else {
+        layoutConfig.value.sidebar.enabled = true
+        layoutConfig.value.showBreadcrumb = true
+      }
+    },
+    toggleBreadcrumb: () => {
+      layoutConfig.value.showBreadcrumb = !layoutConfig.value.showBreadcrumb
+    },
 
     resetToDefault: () => {
       layoutConfig.value = { ...defaultLayoutConfig }

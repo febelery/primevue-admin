@@ -28,7 +28,7 @@
     </div>
 
     <AppSidebar
-      v-if="layoutConfig.sidebar.enabled"
+      v-if="isSidebarEnabled"
       :collapsed="isSidebarCollapsed"
       @toggle="toggleSidebar"
       class="animate-slide-in-left relative z-10"
@@ -54,7 +54,7 @@ import { useLayout } from '@/composables/useLayout'
 import { provide } from 'vue'
 
 // 使用新的布局配置
-const { layoutConfig, isSidebarCollapsed, toggleSidebar } = useLayout()
+const { layoutConfig, isSidebarCollapsed, isSidebarEnabled, toggleSidebar } = useLayout()
 
 // 布局方法
 const layoutMethods = {

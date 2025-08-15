@@ -72,9 +72,15 @@
       />
     </div>
 
-    <!-- Navigation Menu -->
+    <!-- 导航菜单 -->
     <nav class="relative flex-1 overflow-x-hidden overflow-y-auto px-3 py-4">
-      <!-- 未实现 -->
+      <AppMenu
+        v-for="item in menuItems"
+        :key="item.key"
+        :item="item"
+        :collapsed="collapsed"
+        :level="0"
+      />
     </nav>
 
     <div
@@ -102,6 +108,8 @@
 </template>
 
 <script setup lang="ts">
+import AppMenu from './AppMenu.vue'
+import { useMenu } from '@/composables/useMenu'
 import UserMenu from '@/layouts/components/UserMenu.vue'
 import { useUserStore } from '@/stores/user'
 import type { UserMenuItem } from '@/types/user'
@@ -125,6 +133,8 @@ defineEmits<Emits>()
 const userStore = useUserStore()
 
 const sidebarRef = ref<HTMLElement>()
+
+const { menuItems } = useMenu()
 
 // 侧边栏样式类
 const sidebarClasses = computed(() => [

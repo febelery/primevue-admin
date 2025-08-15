@@ -74,6 +74,45 @@
       </div>
 
       <!-- 分隔线 -->
+      <div class="border-surface-200 dark:border-surface-700 sr-only border-t"></div>
+
+      <!-- 布局模式 -->
+      <div class="sr-only">
+        <label class="text-surface-900 dark:text-surface-100 mb-3 block text-sm font-medium">
+          布局模式
+        </label>
+        <div class="grid grid-cols-2 gap-2">
+          <div
+            v-for="mode in layoutModeOptions"
+            :key="mode.key"
+            :class="[
+              'relative cursor-pointer rounded-lg border-2 p-3 transition-all',
+              currentLayoutMode === mode.key
+                ? 'border-primary bg-primary/5'
+                : 'border-surface-200 hover:border-surface-300 dark:border-surface-700 dark:hover:border-surface-600',
+            ]"
+            @click="setLayoutMode(mode.key as any)"
+          >
+            <div class="mb-2 flex items-center justify-center">
+              <i :class="[mode.icon, 'text-surface-600 dark:text-surface-400 text-lg']"></i>
+            </div>
+            <p class="text-surface-700 dark:text-surface-300 text-center text-xs font-medium">
+              {{ mode.label }}
+            </p>
+            <p class="text-surface-500 dark:text-surface-400 mt-1 text-center text-xs">
+              {{ mode.description }}
+            </p>
+            <div
+              v-if="currentLayoutMode === mode.key"
+              class="bg-primary absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full text-white"
+            >
+              <i class="pi pi-check text-xs"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 分隔线 -->
       <div class="border-surface-200 dark:border-surface-700 border-t"></div>
 
       <!-- 主题色彩配置 -->
@@ -153,6 +192,8 @@ const {
   isCustomColor,
   presetColors,
   setPresetColor,
+  currentLayoutMode,
+  setLayoutMode,
 } = useLayout()
 
 // 主题选项
@@ -160,5 +201,21 @@ const themeOptions = ref([
   { key: 'light', label: '亮色', icon: 'pi pi-sun' },
   { key: 'dark', label: '暗色', icon: 'pi pi-moon' },
   { key: 'system', label: '跟随系统', icon: 'pi pi-desktop' },
+])
+
+// 布局模式选项
+const layoutModeOptions = ref([
+  {
+    key: 'sidebar-topbar',
+    label: '侧栏+顶栏',
+    icon: 'pi pi-th-large',
+    description: '经典布局，菜单在侧栏',
+  },
+  {
+    key: 'topbar-only',
+    label: '仅顶栏',
+    icon: 'pi pi-minus',
+    description: '简洁布局，菜单在顶栏',
+  },
 ])
 </script>
